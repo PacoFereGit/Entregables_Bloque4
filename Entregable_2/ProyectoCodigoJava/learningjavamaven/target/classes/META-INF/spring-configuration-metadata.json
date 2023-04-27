@@ -1,0 +1,42 @@
+{
+  "groups": [
+    {
+      "name": "consumers",
+      "type": "com.wizeline.maven.learningjavamaven.config.EndpointBean",
+      "sourceType": "com.wizeline.maven.learningjavamaven.config.EndpointBean"
+    }
+  ],
+  "properties": [
+    {
+      "name": "consumers.accounts",
+      "type": "java.lang.String",
+      "sourceType": "com.wizeline.maven.learningjavamaven.config.EndpointBean"
+    },
+    {
+      "name": "consumers.accounts-group-by-type",
+      "type": "java.lang.String",
+      "sourceType": "com.wizeline.maven.learningjavamaven.config.EndpointBean"
+    },
+    {
+      "name": "consumers.create-user",
+      "type": "java.lang.String",
+      "sourceType": "com.wizeline.maven.learningjavamaven.config.EndpointBean"
+    },
+    {
+      "name": "consumers.create-users",
+      "type": "java.lang.String",
+      "sourceType": "com.wizeline.maven.learningjavamaven.config.EndpointBean"
+    },
+    {
+      "name": "consumers.login",
+      "type": "java.lang.String",
+      "sourceType": "com.wizeline.maven.learningjavamaven.config.EndpointBean"
+    },
+    {
+      "name": "consumers.user-account",
+      "type": "java.lang.String",
+      "sourceType": "com.wizeline.maven.learningjavamaven.config.EndpointBean"
+    }
+  ],
+  "hints": []
+}

@@ -1,7 +1,7 @@
 # Entregables_Bloque4
 Repositorio que se utilizará para entregar todos los trabajos del curso wizeline
 
-# Primer entregable: se organizará de la siguiente forma:
+# Primer entregable: se organizó de la siguiente forma:
 Entregable_1 <br />
     1_git    <br />
     2_pull_Request <br />
@@ -13,3 +13,9 @@ Entregable_1 <br />
     8_kafka_Productor_Consumidor <br />
     9_mongoDB_Exportada <br />
     10_operaciones_CRUD <br />
+
+# Segundo entregable: se organizó de la siguiente forma:
+Dentro de la carpeta Entregable_2 se encuentran los archivos en formato .png correspodiente a la
+evidencia de las actividades realizadas, y la carpeta ProyectoCodigoJava el cual contiene todo el código fuente
+que se trabajó en este entregable.
+
