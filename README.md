@@ -18,3 +18,4 @@ Entregable_1 <br />
 Dentro de la carpeta Entregable_2 se encuentran los archivos en formato .png correspodiente a la
 evidencia de las actividades realizadas, y la carpeta ProyectoCodigoJava el cual contiene todo el código fuente
 que se trabajó en este entregable.
+
