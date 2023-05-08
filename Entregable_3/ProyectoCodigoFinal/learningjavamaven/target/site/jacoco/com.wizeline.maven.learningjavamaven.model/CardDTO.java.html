@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CardDTO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">learningjavamaven</a> &gt; <a href="index.source.html" class="el_package">com.wizeline.maven.learningjavamaven.model</a> &gt; <span class="el_source">CardDTO.java</span></div><h1>CardDTO.java</h1><pre class="source lang-java linenums">package com.wizeline.maven.learningjavamaven.model;
+
+import java.time.LocalDateTime;
+import java.util.Objects;
+
+public abstract class CardDTO {
+
+    private long cardNumber;
+    private LocalDateTime expirationDate;
+    private String cardIssuer;
+    private String cardVerificationValue;
+
+    private String cardType;
+
+<span class="fc" id="L15">    public CardDTO() {</span>
+<span class="fc" id="L16">    }</span>
+
+<span class="nc" id="L18">    public CardDTO(CardDTO target) {</span>
+<span class="nc bnc" id="L19" title="All 2 branches missed.">        if(target!= null){</span>
+<span class="nc" id="L20">            this.cardType = target.cardType;</span>
+<span class="nc" id="L21">            this.cardIssuer = target.cardIssuer;</span>
+<span class="nc" id="L22">            this.cardVerificationValue = target.cardVerificationValue;</span>
+<span class="nc" id="L23">            this.cardNumber = target.cardNumber;</span>
+<span class="nc" id="L24">            this.expirationDate = target.expirationDate;</span>
+        }
+<span class="nc" id="L26">    }</span>
+
+    public abstract CardDTO clone();
+
+    @Override
+    public boolean equals(Object object2) {
+<span class="nc bnc" id="L32" title="All 2 branches missed.">        if (!(object2 instanceof CardDTO)) return false;</span>
+<span class="nc" id="L33">        CardDTO cardDTO2 = (CardDTO) object2;</span>
+<span class="nc bnc" id="L34" title="All 4 branches missed.">        return cardDTO2.cardNumber == cardNumber &amp;&amp; Objects.equals(cardDTO2.cardType , cardType)   &amp;&amp;</span>
+<span class="nc bnc" id="L35" title="All 2 branches missed.">                Objects.equals(cardDTO2.cardVerificationValue,cardVerificationValue) &amp;&amp;</span>
+<span class="nc bnc" id="L36" title="All 4 branches missed.">                Objects.equals(cardDTO2.cardIssuer , cardIssuer) &amp;&amp; cardDTO2.expirationDate == expirationDate;</span>
+    }
+
+    public long getCardNumber() {
+<span class="nc" id="L40">        return cardNumber;</span>
+    }
+
+    public void setCardNumber(long cardNumber) {
+<span class="fc" id="L44">        this.cardNumber = cardNumber;</span>
+<span class="fc" id="L45">    }</span>
+
+    public LocalDateTime getExpirationDate() {
+<span class="nc" id="L48">        return expirationDate;</span>
+    }
+
+    public void setExpirationDate(LocalDateTime expirationDate) {
+<span class="nc" id="L52">        this.expirationDate = expirationDate;</span>
+<span class="nc" id="L53">    }</span>
+
+    public String getCardIssuer() {
+<span class="fc" id="L56">        return cardIssuer;</span>
+    }
+
+    public void setCardIssuer(String cardIssuer) {
+<span class="fc" id="L60">        this.cardIssuer = cardIssuer;</span>
+<span class="fc" id="L61">    }</span>
+
+    public String getCardVerificationValue() {
+<span class="nc" id="L64">        return cardVerificationValue;</span>
+    }
+
+    public void setCardVerificationValue(String cardVerificationValue) {
+<span class="fc" id="L68">        this.cardVerificationValue = cardVerificationValue;</span>
+<span class="fc" id="L69">    }</span>
+
+    public String getCardType() {
+<span class="fc" id="L72">        return cardType;</span>
+    }
+
+    public void setCardType(String cardType) {
+<span class="fc" id="L76">        this.cardType = cardType;</span>
+<span class="fc" id="L77">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

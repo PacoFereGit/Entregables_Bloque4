@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">learningjavamaven</a> &gt; <a href="index.source.html" class="el_package">com.wizeline.maven.learningjavamaven.service</a> &gt; <span class="el_source">UserServiceImpl.java</span></div><h1>UserServiceImpl.java</h1><pre class="source lang-java linenums">package com.wizeline.maven.learningjavamaven.service;
+
+import com.wizeline.maven.learningjavamaven.model.ResponseDTO;
+import com.wizeline.maven.learningjavamaven.repository.UserRepository;
+import com.wizeline.maven.learningjavamaven.repository.UserRepositoryImpl;
+import com.wizeline.maven.learningjavamaven.utils.Utils;
+import com.wizeline.maven.learningjavamaven.model.ErrorDTO;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Service;
+
+import java.util.logging.Logger;
+
+@Service
+<span class="fc" id="L14">public class UserServiceImpl implements UserService{</span>
+
+<span class="fc" id="L16">    private static final Logger LOGGER = Logger.getLogger(UserServiceImpl.class.getName());</span>
+
+    @Bean
+    public static UserRepository userRepository(){
+<span class="fc" id="L20">        return new UserRepositoryImpl();</span>
+    }
+
+    @Override
+    public ResponseDTO createUser(String user, String password) {
+<span class="nc" id="L25">        LOGGER.info(&quot;Inicia procesamiento en capa de negocio&quot;);</span>
+<span class="nc" id="L26">        ResponseDTO response = new ResponseDTO();</span>
+<span class="nc" id="L27">        String result = &quot;fail&quot;;</span>
+<span class="nc bnc" id="L28" title="All 4 branches missed.">        if (Utils.validateNullValue(user) &amp;&amp; Utils.validateNullValue(password)) {</span>
+<span class="nc" id="L29">            UserRepository userDao = userRepository();</span>
+<span class="nc" id="L30">            result = userDao.createUser(user, password);</span>
+<span class="nc" id="L31">            response.setCode(&quot;OK000&quot;);</span>
+<span class="nc" id="L32">            response.setStatus(result);</span>
+<span class="nc" id="L33">        }else {</span>
+<span class="nc" id="L34">            response.setCode(&quot;OK000&quot;);</span>
+<span class="nc" id="L35">            response.setStatus(result);</span>
+<span class="nc" id="L36">            response.setErrors(new ErrorDTO(&quot;ER001&quot;,&quot;Error al crear usuario&quot;));</span>
+        }
+<span class="nc" id="L38">        return response;</span>
+    }
+
+    @Override
+    public ResponseDTO login(String user, String password) {
+<span class="nc" id="L43">        LOGGER.info(&quot;Inicia procesamiento en capa de negocio&quot;);</span>
+<span class="nc" id="L44">        ResponseDTO response = new ResponseDTO();</span>
+<span class="nc" id="L45">        String result = &quot;&quot;;</span>
+<span class="nc bnc" id="L46" title="All 4 branches missed.">        if (Utils.validateNullValue(user) &amp;&amp; Utils.validateNullValue(password)) {</span>
+<span class="nc" id="L47">            UserRepository userDao = userRepository();</span>
+<span class="nc" id="L48">            result = userDao.login(user, password);</span>
+        }
+<span class="nc bnc" id="L50" title="All 2 branches missed.">        if(&quot;success&quot;.equals(result)) {</span>
+<span class="nc" id="L51">            response.setCode(&quot;OK000&quot;);</span>
+<span class="nc" id="L52">            response.setStatus(result);</span>
+        } else {
+<span class="nc" id="L54">            response.setCode(&quot;ER001&quot;);</span>
+<span class="nc" id="L55">            response.setErrors(new ErrorDTO(&quot;ER001&quot;,result));</span>
+<span class="nc" id="L56">            response.setStatus(&quot;fail&quot;);</span>
+        }
+<span class="nc" id="L58">        return response;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

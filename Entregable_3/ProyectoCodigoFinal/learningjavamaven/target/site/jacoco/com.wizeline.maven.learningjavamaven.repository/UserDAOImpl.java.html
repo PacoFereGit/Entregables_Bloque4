@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserDAOImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">learningjavamaven</a> &gt; <a href="index.source.html" class="el_package">com.wizeline.maven.learningjavamaven.repository</a> &gt; <span class="el_source">UserDAOImpl.java</span></div><h1>UserDAOImpl.java</h1><pre class="source lang-java linenums">package com.wizeline.maven.learningjavamaven.repository;
+
+import java.io.*;
+import java.util.logging.Logger;
+
+<span class="nc" id="L6">public class UserDAOImpl implements UserDAO{</span>
+
+<span class="nc" id="L8">    private static final Logger LOGGER = Logger.getLogger(UserDAOImpl.class.getName());</span>
+
+
+    @Override
+    public String createUser(String user, String password){
+<span class="nc" id="L13">        createFile();</span>
+<span class="nc" id="L14">        LOGGER.info(&quot;Inicia procesamiento en capa de acceso de datos&quot;);</span>
+<span class="nc" id="L15">        LOGGER.info(&quot;Inicia proceso de alta de usuario en BD ...&quot;);</span>
+
+<span class="nc" id="L17">        writeFile(user,password);</span>
+
+<span class="nc" id="L19">        LOGGER.info(&quot;Alta exitosa&quot;);</span>
+<span class="nc" id="L20">        return &quot;success&quot;;</span>
+    }
+
+    @Override
+    public String login(String user, String password){
+<span class="nc" id="L25">        createFile();</span>
+<span class="nc" id="L26">        LOGGER.info(&quot;Inicia procesamiento en capa de acceso de datos&quot;);</span>
+<span class="nc" id="L27">        LOGGER.info(&quot;Inica proceso de login ...&quot;);</span>
+<span class="nc" id="L28">        LOGGER.info(&quot;Respuesta del metodo login  -------&gt; &quot;+ readFile(user,password));</span>
+<span class="nc bnc" id="L29" title="All 2 branches missed.">        if(&quot;success&quot;.equals(readFile(user,password))){</span>
+<span class="nc" id="L30">            LOGGER.info(&quot;Login exitoso&quot;);</span>
+<span class="nc" id="L31">            return &quot;success&quot;;</span>
+        }else{
+<span class="nc" id="L33">            return &quot;Usuario o password incorrecto&quot;;</span>
+        }
+    }
+
+    private void createFile(){
+        try{
+<span class="nc" id="L39">            File myObj = new File(&quot;file.txt&quot;);</span>
+<span class="nc bnc" id="L40" title="All 2 branches missed.">            if(myObj.createNewFile()){</span>
+<span class="nc" id="L41">                LOGGER.info(&quot;File create: &quot;+myObj.getName());</span>
+            }else{
+<span class="nc" id="L43">                LOGGER.info(&quot;File already exists.&quot;);</span>
+            }
+<span class="nc" id="L45">        }catch (IOException e){</span>
+<span class="nc" id="L46">            LOGGER.info(&quot;An error ocurred.&quot;);</span>
+<span class="nc" id="L47">            e.printStackTrace();</span>
+<span class="nc" id="L48">        }</span>
+<span class="nc" id="L49">    }</span>
+
+    private void writeFile(String user, String password){
+        try{
+<span class="nc" id="L53">            File file = new File(&quot;file.txt&quot;);</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">            if(file.createNewFile()){</span>
+<span class="nc" id="L55">                LOGGER.info(&quot;File created: &quot;+file.getName());</span>
+            }else{
+<span class="nc" id="L57">                LOGGER.info(&quot;File already exists.&quot;);</span>
+            }
+
+<span class="nc" id="L60">            FileWriter fileWriter = new FileWriter(file.getName(), true);</span>
+
+<span class="nc" id="L62">            BufferedWriter bw = new BufferedWriter(fileWriter);</span>
+<span class="nc" id="L63">            bw.write(user+&quot;, &quot;+password);</span>
+<span class="nc" id="L64">            bw.newLine();</span>
+<span class="nc" id="L65">            bw.close();</span>
+<span class="nc" id="L66">            LOGGER.info(&quot;Successfully wrote to the file. &quot;);</span>
+<span class="nc" id="L67">        }catch(IOException e){</span>
+<span class="nc" id="L68">            LOGGER.info(&quot;An error ocurred.&quot;);</span>
+<span class="nc" id="L69">            e.printStackTrace();</span>
+<span class="nc" id="L70">        }</span>
+<span class="nc" id="L71">    }</span>
+
+
+    private String readFile(String user,String password){
+<span class="nc" id="L75">        String result = &quot;fail&quot;;</span>
+        try{
+<span class="nc" id="L77">            File file = new File(&quot;file.txt&quot;);</span>
+<span class="nc" id="L78">            BufferedReader br = new BufferedReader(new FileReader(file));</span>
+<span class="nc" id="L79">            String line= &quot;&quot;;</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">            while((line = br.readLine()) != null){</span>
+<span class="nc bnc" id="L81" title="All 4 branches missed.">                if(line.contains(user) &amp;&amp; line.contains(password)){</span>
+<span class="nc" id="L82">                    result = &quot;success&quot;;</span>
+                }
+            }
+<span class="nc" id="L85">            br.close();</span>
+<span class="nc" id="L86">        }catch(IOException e){</span>
+<span class="nc" id="L87">            LOGGER.info(&quot;An error ocurred.&quot;);</span>
+<span class="nc" id="L88">            e.printStackTrace();</span>
+<span class="nc" id="L89">        }</span>
+<span class="nc" id="L90">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

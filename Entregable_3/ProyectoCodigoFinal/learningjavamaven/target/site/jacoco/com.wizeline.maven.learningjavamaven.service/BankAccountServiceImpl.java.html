@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BankAccountServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">learningjavamaven</a> &gt; <a href="index.source.html" class="el_package">com.wizeline.maven.learningjavamaven.service</a> &gt; <span class="el_source">BankAccountServiceImpl.java</span></div><h1>BankAccountServiceImpl.java</h1><pre class="source lang-java linenums">package com.wizeline.maven.learningjavamaven.service;
+
+import com.mongodb.client.result.UpdateResult;
+import com.wizeline.maven.learningjavamaven.enums.Country;
+import com.wizeline.maven.learningjavamaven.model.BankAccountDTO;
+import com.wizeline.maven.learningjavamaven.repository.BankingAccountRepository;
+import com.wizeline.maven.learningjavamaven.utils.Utils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
+import static com.wizeline.maven.learningjavamaven.utils.Utils.*;
+
+<span class="fc" id="L23">public class BankAccountServiceImpl implements BankAccountService{</span>
+
+<span class="fc" id="L25">    private static final Logger LOGGER = Logger.getLogger(BankAccountServiceImpl.class.getName());</span>
+
+    @Autowired
+    BankingAccountRepository bankAccountRepository;
+
+    @Autowired
+    MongoTemplate mongoTemplate;
+
+    @Override
+    public List&lt;BankAccountDTO&gt; getAccounts() {
+        // Definicion de lista con la informacion de las cuentas existentes.
+<span class="nc" id="L36">        List&lt;BankAccountDTO&gt; accountDTOList = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L37">        BankAccountDTO bankAccountOne = buildBankAccount(&quot;user3@wizeline.com&quot;, true, Country.MX, LocalDateTime.now().minusDays(7));</span>
+<span class="nc" id="L38">        accountDTOList.add(bankAccountOne);</span>
+        //Guardar cada record en la db de mongo (en la coleccion bankAccountCollection)
+<span class="nc" id="L40">        mongoTemplate.save(bankAccountOne);</span>
+
+<span class="nc" id="L42">        BankAccountDTO bankAccountTwo = buildBankAccount(&quot;user1@wizeline.com&quot;, false, Country.FR, LocalDateTime.now().minusMonths(2));</span>
+<span class="nc" id="L43">        accountDTOList.add(bankAccountTwo);</span>
+        //Guardar cada record en la db de mongo (en la coleccion bankAccountCollection)
+<span class="nc" id="L45">        mongoTemplate.save(bankAccountTwo);</span>
+
+<span class="nc" id="L47">        BankAccountDTO bankAccountThree = buildBankAccount(&quot;user2@wizeline.com&quot; ,false, Country.US, LocalDateTime.now().minusYears(4));</span>
+<span class="nc" id="L48">        accountDTOList.add(bankAccountThree);</span>
+        //Guardar cada record en la db de mongo (en la coleccion bankAccountCollection)
+<span class="nc" id="L50">        mongoTemplate.save(bankAccountThree);</span>
+
+        //Imprime en la Consola cuales son los records encontrados en la coleccion
+        //bankAccountCollection de la mongo db
+<span class="nc" id="L54">        mongoTemplate.findAll(BankAccountDTO.class).stream().map(bankAccountDTO -&gt; bankAccountDTO.getUserName()).forEach(</span>
+                (user) -&gt; {
+<span class="nc" id="L56">                    LOGGER.info(&quot;User stored in bankAccountCollection &quot; + user );</span>
+<span class="nc" id="L57">                });</span>
+
+        //Esta es la respuesta que se retorna al Controlador
+        //y que sera desplegada cuando se haga la llamada a los
+        //REST endpoints que la invocan (un ejemplo es el endpoint de  getAccounts)
+<span class="nc" id="L62">        return accountDTOList;</span>
+    }
+
+    @Override
+    public BankAccountDTO getAccountDetails(String user, String lastUsage) {
+<span class="nc" id="L67">        DateTimeFormatter dateformatter = DateTimeFormatter.ofPattern(&quot;dd-MM-yyyy&quot;);</span>
+<span class="nc" id="L68">        LocalDate usage = LocalDate.parse(lastUsage, dateformatter);</span>
+<span class="nc" id="L69">        return buildBankAccount(user, true, Country.MX, usage.atStartOfDay());</span>
+    }
+
+    // Creación de tipo de dato BankAccount
+    private BankAccountDTO buildBankAccount(String user, boolean isActive, Country country, LocalDateTime lastUsage) {
+<span class="nc" id="L74">        BankAccountDTO bankAccountDTO = new BankAccountDTO();</span>
+<span class="nc" id="L75">        bankAccountDTO.setAccountNumber(randomAccountNumber());</span>
+<span class="nc" id="L76">        bankAccountDTO.setAccountName(&quot;Dummy Account &quot;.concat(randomInt()));</span>
+<span class="nc" id="L77">        bankAccountDTO.setUser(user);</span>
+<span class="nc" id="L78">        bankAccountDTO.setAccountBalance(randomBalance());</span>
+<span class="nc" id="L79">        bankAccountDTO.setAccountType(pickRandomAccountType());</span>
+<span class="nc" id="L80">        bankAccountDTO.setCountry(getCountry(country));</span>
+<span class="nc" id="L81">        bankAccountDTO.getLastUsage();</span>
+<span class="nc" id="L82">        bankAccountDTO.setCreationDate(lastUsage);</span>
+<span class="nc" id="L83">        bankAccountDTO.setAccountActive(isActive);</span>
+<span class="nc" id="L84">        return bankAccountDTO;</span>
+    }
+
+    @Override
+    public void deleteAccounts() {
+        //Deleting all records inside of bankAccountCollection in the mongo db
+<span class="nc" id="L90">        bankAccountRepository.deleteAll();</span>
+<span class="nc" id="L91">    }</span>
+
+    @Override
+    public void updateAccounts(String user){
+<span class="nc" id="L95">        Query query = new Query();</span>
+<span class="nc" id="L96">        Update update = new Update();</span>
+<span class="nc" id="L97">        query.addCriteria(Criteria.where(&quot;user&quot;).is(user));</span>
+<span class="nc" id="L98">        update.set(&quot;accountName&quot;,&quot;Dummy Account Actualizada&quot;);</span>
+<span class="nc" id="L99">        mongoTemplate.updateFirst(query, update,BankAccountDTO.class);</span>
+<span class="nc" id="L100">    }</span>
+
+
+    @Override
+    public List&lt;BankAccountDTO&gt; getAccountByUser(String user) {
+        //Buscamos todos aquellos registros de tipo BankAccountDTO
+        //que cumplen con la criteria de que el userName haga match
+        //con la variable user
+<span class="nc" id="L108">        Query query = new Query();</span>
+<span class="nc" id="L109">        query.addCriteria(Criteria.where(&quot;user&quot;).is(user));</span>
+<span class="nc" id="L110">        return mongoTemplate.find(query, BankAccountDTO.class);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

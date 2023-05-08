@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CreditCardDTO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">learningjavamaven</a> &gt; <a href="index.source.html" class="el_package">com.wizeline.maven.learningjavamaven.model</a> &gt; <span class="el_source">CreditCardDTO.java</span></div><h1>CreditCardDTO.java</h1><pre class="source lang-java linenums">package com.wizeline.maven.learningjavamaven.model;
+
+import java.time.LocalDateTime;
+
+public class CreditCardDTO extends CardDTO{
+    private LocalDateTime cutOffDate;
+    private long creditAmount;
+<span class="fc" id="L8">    public CreditCardDTO (){</span>
+
+<span class="fc" id="L10">    }</span>
+    public CreditCardDTO(CreditCardDTO target){
+<span class="nc" id="L12">        super(target);</span>
+<span class="nc bnc" id="L13" title="All 2 branches missed.">        if(target != null){</span>
+<span class="nc" id="L14">            this.creditAmount = target.creditAmount;</span>
+<span class="nc" id="L15">            this.cutOffDate = target.cutOffDate;</span>
+        }
+<span class="nc" id="L17">    }</span>
+
+    @Override
+    public CardDTO clone(){
+<span class="nc" id="L21">        return new CreditCardDTO(this);</span>
+    }
+
+    @Override
+    public boolean equals(Object object2) {
+<span class="nc bnc" id="L26" title="All 4 branches missed.">        if (!(object2 instanceof CreditCardDTO) || !super.equals(object2)) return false;</span>
+<span class="nc" id="L27">        CreditCardDTO creditCardDTO2 = (CreditCardDTO) object2;</span>
+<span class="nc bnc" id="L28" title="All 4 branches missed.">        return creditCardDTO2.cutOffDate == cutOffDate &amp;&amp; creditCardDTO2.creditAmount == creditAmount;</span>
+    }
+
+    public LocalDateTime getCutOffDate() {
+<span class="nc" id="L32">        return cutOffDate;</span>
+    }
+
+    public void setCutOffDate(LocalDateTime cutOffDate) {
+<span class="nc" id="L36">        this.cutOffDate = cutOffDate;</span>
+<span class="nc" id="L37">    }</span>
+
+    public long getCreditAmount() {
+<span class="nc" id="L40">        return creditAmount;</span>
+    }
+
+    public void setCreditAmount(long creditAmount) {
+<span class="fc" id="L44">        this.creditAmount = creditAmount;</span>
+<span class="fc" id="L45">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

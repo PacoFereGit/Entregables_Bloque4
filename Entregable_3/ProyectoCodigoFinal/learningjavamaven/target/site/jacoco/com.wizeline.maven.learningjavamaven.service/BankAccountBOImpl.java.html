@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BankAccountBOImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">learningjavamaven</a> &gt; <a href="index.source.html" class="el_package">com.wizeline.maven.learningjavamaven.service</a> &gt; <span class="el_source">BankAccountBOImpl.java</span></div><h1>BankAccountBOImpl.java</h1><pre class="source lang-java linenums">package com.wizeline.maven.learningjavamaven.service;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import com.wizeline.maven.learningjavamaven.model.BankAccountDTO;
+import com.wizeline.maven.learningjavamaven.enums.Country;
+
+import static com.wizeline.maven.learningjavamaven.utils.Utils.*;
+
+
+<span class="nc" id="L14">public class BankAccountBOImpl implements BankAccountBO{</span>
+
+    @Override
+    public BankAccountDTO getAccountDetails (String user, String lastUsage){
+<span class="nc" id="L18">        DateTimeFormatter dateformatter =DateTimeFormatter.ofPattern(&quot;dd-MM-yyyy&quot;);</span>
+<span class="nc" id="L19">        LocalDate usage = LocalDate.parse(lastUsage,dateformatter);</span>
+<span class="nc" id="L20">        return buildBankAccount(user,true,Country.MX,usage.atStartOfDay()); //Agegar código de pais</span>
+    }
+
+    @Override
+    public List&lt;BankAccountDTO&gt; getAccounts(){
+        //Definicion de lista con la información de las cuentas existentes.
+<span class="nc" id="L26">        List&lt;BankAccountDTO&gt; accountDTOList = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L27">        accountDTOList.add(buildBankAccount(&quot;user3@wizeline.com&quot;,true, Country.MX, LocalDateTime.now().minusDays(7)));</span>
+<span class="nc" id="L28">        accountDTOList.add(buildBankAccount(&quot;user1@wizeline.com&quot;,false, Country.FR,LocalDateTime.now().minusMonths(2)));</span>
+<span class="nc" id="L29">        accountDTOList.add(buildBankAccount(&quot;user2@wizeline.com&quot;,false, Country.US,LocalDateTime.now().minusYears(4)));</span>
+
+<span class="nc" id="L31">        return accountDTOList;</span>
+    }
+
+    //Creacion tipo de dato BankAccount con ayuda de la clase Utils.java
+    private BankAccountDTO buildBankAccount(String user, boolean isActive, Country country, LocalDateTime lastUsage){
+<span class="nc" id="L36">        BankAccountDTO bankAccountDTO = new BankAccountDTO();</span>
+<span class="nc" id="L37">        bankAccountDTO.setAccountNumber(randomAccountNumber());</span>
+<span class="nc" id="L38">        bankAccountDTO.setAccountName(&quot;Dummy Account &quot;.concat(randomInt()));</span>
+<span class="nc" id="L39">        bankAccountDTO.setUser(user);</span>
+<span class="nc" id="L40">        bankAccountDTO.setAccountBalance(randomBalance());</span>
+<span class="nc" id="L41">        bankAccountDTO.setAccountType(pickRandomAccountType());</span>
+<span class="nc" id="L42">        bankAccountDTO.setCountry(getCountry(country));</span>
+        //bankAccountDTO.getLastUsage(); // &lt;- Se invoca al metodo de acceso get() para obtener la fecha actual
+<span class="nc" id="L44">        bankAccountDTO.setLastUsage(lastUsage);</span>
+<span class="nc" id="L45">        bankAccountDTO.setCreationDate(lastUsage);</span>
+<span class="nc" id="L46">        bankAccountDTO.setAccountActive(isActive);</span>
+<span class="nc" id="L47">        return bankAccountDTO;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

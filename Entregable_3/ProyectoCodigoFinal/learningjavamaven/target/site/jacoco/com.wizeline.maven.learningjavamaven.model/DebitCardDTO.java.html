@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DebitCardDTO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">learningjavamaven</a> &gt; <a href="index.source.html" class="el_package">com.wizeline.maven.learningjavamaven.model</a> &gt; <span class="el_source">DebitCardDTO.java</span></div><h1>DebitCardDTO.java</h1><pre class="source lang-java linenums">package com.wizeline.maven.learningjavamaven.model;
+
+import java.util.Objects;
+
+public class DebitCardDTO extends CardDTO {
+    private int minimumAmount;
+    private long currentAccount;
+
+<span class="fc" id="L9">    public DebitCardDTO(){</span>
+<span class="fc" id="L10">    }</span>
+
+    public DebitCardDTO(DebitCardDTO target){
+<span class="nc" id="L13">        super(target);</span>
+<span class="nc bnc" id="L14" title="All 2 branches missed.">        if(target != null){</span>
+<span class="nc" id="L15">            this.minimumAmount = target.minimumAmount;</span>
+<span class="nc" id="L16">            this.currentAccount = target.currentAccount;</span>
+        }
+<span class="nc" id="L18">    }</span>
+
+
+    @Override
+    public CardDTO clone(){
+<span class="nc" id="L23">        return new DebitCardDTO(this);</span>
+    }
+
+    @Override
+    public boolean equals(Object object2) {
+<span class="nc bnc" id="L28" title="All 4 branches missed.">        if (!(object2 instanceof DebitCardDTO) || !super.equals(object2)) return false;</span>
+<span class="nc" id="L29">        DebitCardDTO debitCardDTO2 = (DebitCardDTO) object2;</span>
+<span class="nc bnc" id="L30" title="All 4 branches missed.">        return debitCardDTO2.minimumAmount ==minimumAmount &amp;&amp; debitCardDTO2.currentAccount==currentAccount;</span>
+    }
+
+    public int getMinimumAmount() {
+<span class="nc" id="L34">        return minimumAmount;</span>
+    }
+
+    public void setMinimumAmount(int minimumAmount) {
+<span class="fc" id="L38">        this.minimumAmount = minimumAmount;</span>
+<span class="fc" id="L39">    }</span>
+
+    public long getCurrentAccount() {
+<span class="nc" id="L42">        return currentAccount;</span>
+    }
+
+    public void setCurrentAccount(long currentAccount) {
+<span class="fc" id="L46">        this.currentAccount = currentAccount;</span>
+<span class="fc" id="L47">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
