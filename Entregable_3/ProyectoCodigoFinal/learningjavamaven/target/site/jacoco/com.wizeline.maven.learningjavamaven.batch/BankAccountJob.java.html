@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BankAccountJob.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">learningjavamaven</a> &gt; <a href="index.source.html" class="el_package">com.wizeline.maven.learningjavamaven.batch</a> &gt; <span class="el_source">BankAccountJob.java</span></div><h1>BankAccountJob.java</h1><pre class="source lang-java linenums">package com.wizeline.maven.learningjavamaven.batch;
+
+import com.wizeline.maven.learningjavamaven.model.BankAccountDTO;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecutionListener;
+import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
+import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.item.file.FlatFileItemWriter;
+import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
+import org.springframework.batch.item.file.builder.FlatFileItemWriterBuilder;
+import org.springframework.batch.item.file.transform.PassThroughLineAggregator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
+
+@Configuration
+<span class="fc" id="L24">public class BankAccountJob {</span>
+
+    @Autowired
+    private JobBuilderFactory jobBuilderFactory;
+
+    @Autowired
+    private StepBuilderFactory stepBuilderFactory;
+
+    //Inyectar dependecncias
+    /**
+     * Crea el job y específica steps y listener.
+     * @return bankAccountsBackupJob
+     */
+    @Bean
+    public Job bankAccountsBackupJob() {
+<span class="fc" id="L39">        return jobBuilderFactory.get(&quot;bankAccountsBackupJob&quot;)</span>
+<span class="fc" id="L40">                .start(bankAccountsBackupStep(stepBuilderFactory))</span>
+<span class="fc" id="L41">                .listener(jobExecutionListener())</span>
+<span class="fc" id="L42">                .build();</span>
+
+    }//termina metodo bankAccountBackup
+
+    /**
+     * Se define el step y los procesos para leer, procesar y escribir.
+     * @param stepBuilderFactory
+     * @return bankAccountsBackupStep
+     */
+    @Bean
+    public Step bankAccountsBackupStep(StepBuilderFactory stepBuilderFactory) {
+<span class="fc" id="L53">        return stepBuilderFactory.get(&quot;bankAccountsBackupStep&quot;)</span>
+<span class="fc" id="L54">                .&lt;BankAccountDTO, String&gt;chunk(5).reader(bankAccountsReader())</span>
+<span class="fc" id="L55">                .processor(bankAccountItemProcessor()).writer(bankAccountsWriter()).build();</span>
+    }//termina metodo bankAccountsBackupStep
+
+    /**
+     * Define un itemReader para leer un archivo csv y mapear el contenido usando BankAccountDTO.
+     * @return
+     */
+    @Bean
+    public FlatFileItemReader&lt;BankAccountDTO&gt; bankAccountsReader() {
+<span class="fc" id="L64">        return new FlatFileItemReaderBuilder&lt;BankAccountDTO&gt;()</span>
+<span class="fc" id="L65">                .name(&quot;bankAccountsReader&quot;)</span>
+<span class="fc" id="L66">                .resource(new ClassPathResource(&quot;csv/accounts.csv&quot;))</span>
+<span class="fc" id="L67">                .delimited().names(new String[] {&quot;country&quot;, &quot;accountName&quot;, &quot;accountType&quot;, &quot;accountBalance&quot;, &quot;userName&quot;})</span>
+<span class="fc" id="L68">                .targetType(BankAccountDTO.class).build();</span>
+    }//termina metodo FlatFileItemReader
+
+    /**
+     * Define un itemWriter para escribir en un archivo txt.
+     * @return
+     */
+    @Bean
+    public FlatFileItemWriter&lt;String&gt; bankAccountsWriter() {
+<span class="fc" id="L77">        return new FlatFileItemWriterBuilder&lt;String&gt;()</span>
+<span class="fc" id="L78">                .name(&quot;bankAccountsWriter&quot;)</span>
+<span class="fc" id="L79">                .resource(new FileSystemResource(</span>
+                        &quot;target/test-outputs/bankAccountsBackup.txt&quot;))
+<span class="fc" id="L81">                .lineAggregator(new PassThroughLineAggregator&lt;&gt;()).build();</span>
+    }//termina metodo FlatFileItemWriter
+
+    //Se crean dos metodos uno para invocar un itemProcessor y otro para invocar un listener.
+    @Bean
+    public BankAccountItemProcessor bankAccountItemProcessor() {
+<span class="fc" id="L87">        return new BankAccountItemProcessor();</span>
+    }
+
+    @Bean
+    public JobExecutionListener jobExecutionListener() {
+<span class="fc" id="L92">        return new BatchJobCompletionListener();</span>
+    }
+
+}//termina clase BankAccountJob
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
