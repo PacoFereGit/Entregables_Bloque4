@@ -1,0 +1,681 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "LearningJava API",
+    "contact": {
+      "name": "Developer",
+      "url": "https://www.wizeline.com/",
+      "email": "fferegrino@wizeline.com"
+    },
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Entorno de desarrollo."
+    },
+    {
+      "url": "http://produccion:5443",
+      "description": "Entorno productivo"
+    }
+  ],
+  "security": [
+    {
+      "JWT Token": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Batch",
+      "description": "Ejecución manual del Batch . "
+    },
+    {
+      "name": "BankCard",
+      "description": "Acceso información a tarjetas ."
+    },
+    {
+      "name": "Authentication",
+      "description": "Genera token de autenticación."
+    },
+    {
+      "name": "BankAccount",
+      "description": "Acceso información de cuentas ."
+    },
+    {
+      "name": "JAXB",
+      "description": "Validacion uso de JAXB."
+    },
+    {
+      "name": "Login",
+      "description": "Acceso y Creacion de Usuarios ."
+    }
+  ],
+  "paths": {
+    "/api/updateAccounts": {
+      "put": {
+        "tags": [
+          "BankAccount"
+        ],
+        "operationId": "updateAccounts",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authenticate": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "getAuthenticationToken",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/send/{userId}": {
+      "post": {
+        "tags": [
+          "BankAccount"
+        ],
+        "operationId": "sendUserAccount",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/createUsers": {
+      "post": {
+        "tags": [
+          "Login"
+        ],
+        "summary": "Alta de usuarios nuevos para el aplicativo",
+        "operationId": "createUsersAccount",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UserDTO"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ResponseDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/createUser": {
+      "post": {
+        "tags": [
+          "Login"
+        ],
+        "operationId": "createUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/jaxb/getXML": {
+      "get": {
+        "tags": [
+          "JAXB"
+        ],
+        "operationId": "loginUser",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlBean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/batch/start": {
+      "get": {
+        "tags": [
+          "Batch"
+        ],
+        "operationId": "startBatch",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sayHello": {
+      "get": {
+        "tags": [
+          "BankAccount"
+        ],
+        "summary": "Envia saludo al usuario",
+        "operationId": "sayHelloGuest",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/login": {
+      "get": {
+        "tags": [
+          "Login"
+        ],
+        "summary": "Loguea Usuarios",
+        "operationId": "login",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/getUserAccount": {
+      "get": {
+        "tags": [
+          "BankAccount"
+        ],
+        "operationId": "getUserAccount",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/getExternalUser/{userId}": {
+      "get": {
+        "tags": [
+          "BankAccount"
+        ],
+        "operationId": "getExternalUser",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Post"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/getCards": {
+      "get": {
+        "tags": [
+          "BankCard"
+        ],
+        "operationId": "getCardsGroupByType",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/CardDTO"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/getAccounts": {
+      "get": {
+        "tags": [
+          "BankAccount"
+        ],
+        "operationId": "getAccounts",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BankAccountDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/getAccountsGroupByType": {
+      "get": {
+        "tags": [
+          "BankAccount"
+        ],
+        "operationId": "getAccountsGroupByType",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/BankAccountDTO"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/getAccountByUser": {
+      "get": {
+        "tags": [
+          "BankAccount"
+        ],
+        "operationId": "getAccountByUser",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BankAccountDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/executeApi": {
+      "get": {
+        "tags": [
+          "BankAccount"
+        ],
+        "operationId": "executeApiExterna",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/deleteAccounts": {
+      "delete": {
+        "tags": [
+          "BankAccount"
+        ],
+        "operationId": "deleteAccounts",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserDTO": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "ErrorDTO": {
+        "type": "object",
+        "properties": {
+          "errorCode": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "ResponseDTO": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "errors": {
+            "$ref": "#/components/schemas/ErrorDTO"
+          }
+        }
+      },
+      "XmlBean": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "Post": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          }
+        }
+      },
+      "CardDTO": {
+        "type": "object",
+        "properties": {
+          "cardNumber": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "expirationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "cardIssuer": {
+            "type": "string"
+          },
+          "cardVerificationValue": {
+            "type": "string"
+          },
+          "cardType": {
+            "type": "string"
+          }
+        }
+      },
+      "BankAccountDTO": {
+        "type": "object",
+        "properties": {
+          "accountNumber": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "accountName": {
+            "type": "string"
+          },
+          "user": {
+            "type": "string"
+          },
+          "accountBalance": {
+            "type": "number",
+            "format": "double"
+          },
+          "accountType": {
+            "type": "string",
+            "enum": [
+              "NOMINA",
+              "AHORRO",
+              "PLATINUM"
+            ]
+          },
+          "country": {
+            "type": "string"
+          },
+          "accountActive": {
+            "type": "boolean"
+          },
+          "lastUsage": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "creationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "userName": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "JWT Token": {
+        "type": "http",
+        "description": "Inserta el token generado. Se obtiene en el apartado de autenticación.",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
