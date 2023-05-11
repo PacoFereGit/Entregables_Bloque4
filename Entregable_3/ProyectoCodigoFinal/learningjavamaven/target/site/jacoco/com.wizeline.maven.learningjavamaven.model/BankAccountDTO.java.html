@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BankAccountDTO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">learningjavamaven</a> &gt; <a href="index.source.html" class="el_package">com.wizeline.maven.learningjavamaven.model</a> &gt; <span class="el_source">BankAccountDTO.java</span></div><h1>BankAccountDTO.java</h1><pre class="source lang-java linenums">package com.wizeline.maven.learningjavamaven.model;
+
+import com.wizeline.maven.learningjavamaven.enums.AccountType;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import javax.persistence.Id;
+import java.time.LocalDateTime;
+
+@Document(&quot;bankAccountCollection&quot;)
+<span class="fc" id="L10">public class BankAccountDTO {</span>
+    @Id
+    private long accountNumber;
+    private String accountName;
+    private String user;
+    private double accountBalance;
+    private AccountType accountType;
+    private String country;
+    private boolean accountActive;
+
+    private LocalDateTime lastUsage;  //ultimo uso de la cuenta
+
+    private LocalDateTime creationDate;
+
+    private String userName;
+
+
+    public long getAccountNumber() {
+<span class="nc" id="L28">        return accountNumber;</span>
+    }
+
+    public void setAccountNumber(long accountNumber) {
+<span class="fc" id="L32">        this.accountNumber = accountNumber;</span>
+<span class="fc" id="L33">    }</span>
+
+    public String getAccountName() {
+<span class="fc" id="L36">        return accountName;</span>
+    }
+
+    public void setAccountName(String accountName) {
+<span class="fc" id="L40">        this.accountName = accountName;</span>
+<span class="fc" id="L41">    }</span>
+
+    public String getUser() {
+<span class="fc" id="L44">        return user;</span>
+    }
+
+    public void setUser(String user) {
+<span class="fc" id="L48">        this.user = user;</span>
+<span class="fc" id="L49">    }</span>
+
+    public double getAccountBalance() {
+<span class="fc" id="L52">        return accountBalance;</span>
+    }
+
+    public void setAccountBalance(double accountBalance) {
+<span class="fc" id="L56">        this.accountBalance = accountBalance;</span>
+<span class="fc" id="L57">    }</span>
+
+    public AccountType getAccountType() {
+<span class="fc" id="L60">        return accountType;</span>
+    }
+
+    public void setAccountType(AccountType accountType) {
+<span class="fc" id="L64">        this.accountType = accountType;</span>
+<span class="fc" id="L65">    }</span>
+
+    public String getCountry() {
+<span class="fc" id="L68">        return country;</span>
+    }
+
+    public void setCountry(String country) {
+<span class="fc" id="L72">        this.country = country;</span>
+<span class="fc" id="L73">    }</span>
+
+    public boolean isAccountActive() {
+<span class="nc" id="L76">        return accountActive;</span>
+    }
+
+    public void setAccountActive(boolean accountActive) {
+<span class="fc" id="L80">        this.accountActive = accountActive;</span>
+<span class="fc" id="L81">    }</span>
+
+
+    public LocalDateTime getCreationDate() {
+<span class="nc" id="L85">        return creationDate;</span>
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+<span class="nc" id="L89">        this.creationDate = creationDate;</span>
+<span class="nc" id="L90">    }</span>
+
+    public LocalDateTime getLastUsage() {
+<span class="nc" id="L93">        return lastUsage;</span>
+    }
+
+    public void setLastUsage(LocalDateTime lastUsage) {
+<span class="fc" id="L97">        this.lastUsage = lastUsage;</span>
+<span class="fc" id="L98">    }</span>
+
+    public String getUserName() {
+<span class="fc" id="L101">        return userName;</span>
+    }
+
+    public void setUserName(String userName) {
+<span class="fc" id="L105">        this.userName = userName;</span>
+<span class="fc" id="L106">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BankCardServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">learningjavamaven</a> &gt; <a href="index.source.html" class="el_package">com.wizeline.maven.learningjavamaven.service</a> &gt; <span class="el_source">BankCardServiceImpl.java</span></div><h1>BankCardServiceImpl.java</h1><pre class="source lang-java linenums">package com.wizeline.maven.learningjavamaven.service;
+
+import com.wizeline.maven.learningjavamaven.model.BankAccountDTO;
+import com.wizeline.maven.learningjavamaven.model.CardDTO;
+import com.wizeline.maven.learningjavamaven.model.CreditCardDTO;
+import com.wizeline.maven.learningjavamaven.model.DebitCardDTO;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
+import static com.wizeline.maven.learningjavamaven.utils.Utils.randomAccountNumber;
+import static com.wizeline.maven.learningjavamaven.utils.Utils.randomInt;
+
+<span class="fc" id="L17">public class BankCardServiceImpl implements BankCardService{</span>
+
+<span class="fc" id="L19">    private static final Logger LOGGER = Logger.getLogger(BankCardServiceImpl.class.getName());</span>
+
+<span class="fc" id="L21">    private static String cardIssuer = &quot;Masterd Card&quot;;</span>
+<span class="fc" id="L22">    private static int minimumAmount = 5000;</span>
+<span class="fc" id="L23">    private static String expirationDate = &quot;13/01/2025&quot;;</span>
+
+<span class="fc" id="L25">    private static String cutOffDate = &quot;01/06/2023&quot;;</span>
+
+<span class="fc" id="L27">    private static long creditAmount = 30000;</span>
+
+
+    @Override
+    public List&lt;CardDTO&gt; getCards(){
+<span class="nc" id="L32">        List&lt;CardDTO&gt; cardDTOList = new ArrayList&lt;&gt;();</span>
+
+<span class="nc" id="L34">        LOGGER.info(&quot;Inicia el clonado de objetos para el patron de diseño prototype&quot;);</span>
+<span class="nc" id="L35">        DebitCardDTO debitCardDTO1 = buildDebitCard();</span>
+<span class="nc" id="L36">        cardDTOList.add(debitCardDTO1);</span>
+<span class="nc" id="L37">        DebitCardDTO debitCardDTO2 = (DebitCardDTO) debitCardDTO1.clone();</span>
+<span class="nc" id="L38">        debitCardDTO2.setCardVerificationValue(getVerificationValue());</span>
+<span class="nc" id="L39">        debitCardDTO2.setCardNumber(randomAccountNumber());</span>
+<span class="nc" id="L40">        debitCardDTO2.setCurrentAccount(randomAccountNumber());</span>
+<span class="nc" id="L41">        cardDTOList.add(debitCardDTO2);</span>
+
+<span class="nc" id="L43">        CreditCardDTO creditCardDTO1 = buildCreditCard();</span>
+<span class="nc" id="L44">        cardDTOList.add(creditCardDTO1);</span>
+<span class="nc" id="L45">        CreditCardDTO creditCardDTO2 = (CreditCardDTO) creditCardDTO1.clone();</span>
+<span class="nc" id="L46">        creditCardDTO2.setCardNumber(randomAccountNumber());</span>
+<span class="nc" id="L47">        creditCardDTO2.setCardVerificationValue(getVerificationValue());</span>
+<span class="nc" id="L48">        cardDTOList.add(creditCardDTO2);</span>
+
+<span class="nc" id="L50">        return cardDTOList;</span>
+    }
+
+    private LocalDate getDateFormatter(String fecha){
+<span class="nc" id="L54">        DateTimeFormatter dateformatter =DateTimeFormatter.ofPattern(&quot;dd/MM/yyyy&quot;);</span>
+<span class="nc" id="L55">        LocalDate usage = LocalDate.parse(fecha,dateformatter);</span>
+<span class="nc" id="L56">        return usage;</span>
+    }
+
+    private String getVerificationValue(){
+<span class="nc" id="L60">        String verificationValue=&quot;&quot;;</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">        for(int i= 0; i&lt;3; i++){</span>
+<span class="nc" id="L62">            verificationValue = verificationValue.concat(randomInt());</span>
+        }
+<span class="nc" id="L64">        return verificationValue;</span>
+    }
+
+    private DebitCardDTO buildDebitCard(){
+<span class="nc" id="L68">        LocalDate expirationDateFormatter = getDateFormatter(expirationDate);</span>
+<span class="nc" id="L69">        DebitCardDTO debitCardDTO = new DebitCardDTO();</span>
+<span class="nc" id="L70">        debitCardDTO.setCardNumber(randomAccountNumber());</span>
+<span class="nc" id="L71">        debitCardDTO.setCardIssuer(cardIssuer);</span>
+<span class="nc" id="L72">        debitCardDTO.setCardVerificationValue(getVerificationValue());</span>
+<span class="nc" id="L73">        debitCardDTO.setMinimumAmount(minimumAmount);</span>
+<span class="nc" id="L74">        debitCardDTO.setExpirationDate(expirationDateFormatter.atStartOfDay());</span>
+<span class="nc" id="L75">        debitCardDTO.setCurrentAccount(randomAccountNumber());</span>
+<span class="nc" id="L76">        debitCardDTO.setCardType(&quot;Tarjeta de Debito&quot;);</span>
+<span class="nc" id="L77">        return debitCardDTO;</span>
+    }
+
+    private CreditCardDTO buildCreditCard(){
+<span class="nc" id="L81">        LocalDate expirationDateFormatter = getDateFormatter(expirationDate);</span>
+<span class="nc" id="L82">        LocalDate cutOffDateFormatter = getDateFormatter(cutOffDate);</span>
+<span class="nc" id="L83">        CreditCardDTO creditCardDTO = new CreditCardDTO();</span>
+<span class="nc" id="L84">        creditCardDTO.setCreditAmount(creditAmount);</span>
+<span class="nc" id="L85">        creditCardDTO.setCardIssuer(cardIssuer);</span>
+<span class="nc" id="L86">        creditCardDTO.setCardNumber(randomAccountNumber());</span>
+<span class="nc" id="L87">        creditCardDTO.setCardVerificationValue(getVerificationValue());</span>
+<span class="nc" id="L88">        creditCardDTO.setCutOffDate(cutOffDateFormatter.atStartOfDay());</span>
+<span class="nc" id="L89">        creditCardDTO.setExpirationDate(expirationDateFormatter.atStartOfDay());</span>
+<span class="nc" id="L90">        creditCardDTO.setCardType(&quot;Tarjeta de Credito&quot;);;</span>
+<span class="nc" id="L91">        return creditCardDTO;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

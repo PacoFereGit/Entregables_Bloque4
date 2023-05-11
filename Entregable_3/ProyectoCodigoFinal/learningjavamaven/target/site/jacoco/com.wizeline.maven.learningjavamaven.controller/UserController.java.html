@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">learningjavamaven</a> &gt; <a href="index.source.html" class="el_package">com.wizeline.maven.learningjavamaven.controller</a> &gt; <span class="el_source">UserController.java</span></div><h1>UserController.java</h1><pre class="source lang-java linenums">package com.wizeline.maven.learningjavamaven.controller;
+
+import com.wizeline.maven.learningjavamaven.model.ResponseDTO;
+import com.wizeline.maven.learningjavamaven.model.UserDTO;
+import com.wizeline.maven.learningjavamaven.service.UserService;
+import io.github.bucket4j.Bandwidth;
+import io.github.bucket4j.Bucket;
+import io.github.bucket4j.Refill;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Logger;
+
+@Tag(name = &quot;Login&quot;, description = &quot;Acceso y Creacion de Usuarios .&quot;)
+@RestController
+@RequestMapping(&quot;/api&quot;)
+public class UserController {
+    @Autowired
+    UserService userService;
+
+    private final Bucket bucket;
+
+<span class="fc" id="L32">    public UserController(){</span>
+<span class="fc" id="L33">        Refill refill = Refill.intervally(5, Duration.ofMinutes(1));</span>
+<span class="fc" id="L34">        Bandwidth limit =Bandwidth.classic(5,refill);</span>
+<span class="fc" id="L35">        this.bucket = Bucket.builder().addLimit(limit).build();</span>
+<span class="fc" id="L36">    }</span>
+
+<span class="fc" id="L38">    private static final Logger LOGGER = Logger.getLogger(UserController.class.getName());</span>
+<span class="fc" id="L39">    String msgProcPeticion = &quot;LearningJava - Inicia procesamiento de peticion UserController...&quot;;</span>
+
+    @Operation(summary = &quot;Loguea Usuarios&quot;)
+    @GetMapping(value=&quot;/login&quot;, produces = &quot;application/json&quot;)
+    public ResponseEntity&lt;ResponseDTO&gt; login(@RequestParam String user, String password){
+        //Logica para limitar las peticiones.
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">        if(bucket.tryConsume(1)) {</span>
+<span class="fc" id="L46">            LOGGER.info(&quot;LearningJava - Procesando petición http de tipo get - Starting ... /login&quot;);</span>
+<span class="fc" id="L47">            ResponseDTO response = new ResponseDTO();</span>
+<span class="fc" id="L48">            response = userService.login(user, password);</span>
+<span class="fc" id="L49">            LOGGER.info(&quot;Login  -  Completado&quot;);</span>
+<span class="fc" id="L50">            return new ResponseEntity&lt;ResponseDTO&gt;(response, HttpStatus.OK);</span>
+        }else{
+<span class="nc" id="L52">            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();</span>
+        }
+    }
+
+    @PostMapping(value=&quot;/createUser&quot;, produces = &quot;application/json&quot;)
+    public ResponseEntity&lt;ResponseDTO&gt; createUser(@RequestBody UserDTO request){
+<span class="fc" id="L58">            LOGGER.info(&quot;LearningJava - Procesando petición http de tipo POST - Starting ... /createUser&quot;);</span>
+<span class="fc" id="L59">            ResponseDTO response = new ResponseDTO();</span>
+<span class="fc" id="L60">            response = userService.createUser(request.getUser(),request.getPassword());</span>
+<span class="fc" id="L61">            LOGGER.info(&quot;createUser  - Completado&quot;);</span>
+<span class="fc" id="L62">            return new ResponseEntity&lt;ResponseDTO&gt;(response,HttpStatus.OK);</span>
+    }
+
+    @Operation(summary = &quot;Alta de usuarios nuevos para el aplicativo&quot;)
+    @PostMapping(value=&quot;/createUsers&quot;, produces = &quot;application/json&quot;)
+    public ResponseEntity&lt;List&lt;ResponseDTO&gt;&gt; createUsersAccount(@RequestBody List&lt;UserDTO&gt; userDTOList){
+<span class="nc" id="L68">        LOGGER.info(msgProcPeticion);</span>
+<span class="nc" id="L69">        AtomicReference&lt;ResponseDTO&gt; response = new AtomicReference&lt;&gt;(new ResponseDTO());</span>
+<span class="nc" id="L70">        List&lt;ResponseDTO&gt; responseList = new ArrayList&lt;&gt;();</span>
+
+<span class="nc" id="L72">        userDTOList.stream().forEach(userDTO -&gt; {</span>
+<span class="nc" id="L73">            String user = userDTO.getUser();</span>
+<span class="nc" id="L74">            String password = userDTO.getPassword();</span>
+<span class="nc" id="L75">            response.set(userService.createUser(user,password));</span>
+<span class="nc" id="L76">            responseList.add(response.get());</span>
+<span class="nc" id="L77">        });</span>
+<span class="nc" id="L78">        HttpHeaders responseHeaders = new HttpHeaders();</span>
+<span class="nc" id="L79">        responseHeaders.set(&quot;Content-Type&quot;, &quot;application/json; charset=UTF-8&quot;);</span>
+
+<span class="nc" id="L81">        return new ResponseEntity&lt;List&lt;ResponseDTO&gt;&gt;(responseList, responseHeaders, HttpStatus.OK);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

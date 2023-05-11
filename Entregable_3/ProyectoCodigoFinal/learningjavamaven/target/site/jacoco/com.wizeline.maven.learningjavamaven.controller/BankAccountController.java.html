@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BankAccountController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">learningjavamaven</a> &gt; <a href="index.source.html" class="el_package">com.wizeline.maven.learningjavamaven.controller</a> &gt; <span class="el_source">BankAccountController.java</span></div><h1>BankAccountController.java</h1><pre class="source lang-java linenums">package com.wizeline.maven.learningjavamaven.controller;
+
+import com.wizeline.maven.learningjavamaven.client.AccountsJSONClient;
+import com.wizeline.maven.learningjavamaven.iterator.BankAccountDTOCollection;
+import com.wizeline.maven.learningjavamaven.iterator.BankAccountDTOCollectionImpl;
+import com.wizeline.maven.learningjavamaven.iterator.Iterator;
+import com.wizeline.maven.learningjavamaven.model.BankAccountDTO;
+import com.wizeline.maven.learningjavamaven.model.Post;
+import com.wizeline.maven.learningjavamaven.model.ResponseDTO;
+import com.wizeline.maven.learningjavamaven.service.BankAccountService;
+import com.wizeline.maven.learningjavamaven.service.UserService;
+import com.wizeline.maven.learningjavamaven.service.WelcomeUser;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Role;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
+import static com.wizeline.maven.learningjavamaven.utils.Utils.*;
+
+@Tag(name = &quot;BankAccount&quot;, description = &quot;Acceso información de cuentas .&quot;)
+@RequestMapping(&quot;/api&quot;)
+@RestController
+<span class="fc" id="L41">public class BankAccountController {</span>
+
+<span class="fc" id="L43">    private static String SUCCESS_CODE = &quot;OK000&quot;;</span>
+
+    @Value(&quot;${server.port}&quot;)
+    private String port;
+
+    @Autowired
+    private KafkaTemplate&lt;Object,Object&gt; template;
+
+    @Autowired
+    AccountsJSONClient accountsJSONClient;
+
+    @Autowired
+    BankAccountService bankAccountService;
+
+    @Autowired
+    UserService userService;
+
+<span class="fc" id="L60">    private static final Logger LOGGER = Logger.getLogger(BankAccountController.class.getName());</span>
+<span class="fc" id="L61">    String msgProcPeticion = &quot;LearningJava - Inicia procesamiento de peticion BankAccountController...&quot;;</span>
+
+    @GetMapping(value=&quot;/getUserAccount&quot;,produces = &quot;application/json&quot;)
+    public ResponseEntity&lt;?&gt; getUserAccount(@RequestParam String user, @RequestParam String password, @RequestParam String date){
+<span class="fc" id="L65">        LOGGER.info(msgProcPeticion);</span>
+<span class="fc" id="L66">        Instant inicioDeEjecucion =Instant.now(); //Se crea objeto de tipo Instant con la hora actual</span>
+<span class="fc" id="L67">        ResponseDTO response = new ResponseDTO();</span>
+<span class="fc" id="L68">        HttpHeaders responseHeaders = new HttpHeaders();</span>
+<span class="fc" id="L69">        responseHeaders.set(&quot;Content-Type&quot;, &quot;application/json; charset=UTF-8&quot;);</span>
+<span class="fc" id="L70">        String responseText = &quot;&quot;;</span>
+
+<span class="pc bpc" id="L72" title="1 of 4 branches missed.">        if(validateNullValue(date) &amp;&amp; isDateFormatValid(date)){</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">            if(isPasswordValid(password)){</span>
+<span class="fc" id="L74">                response = userService.login(user,password);</span>
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">                if(response.getCode().equals(SUCCESS_CODE)){</span>
+<span class="fc" id="L76">                    BankAccountDTO bankAccountDTO = bankAccountService.getAccountDetails(user,date);</span>
+<span class="fc" id="L77">                    getTiempoRespuesta(inicioDeEjecucion);</span>
+<span class="fc" id="L78">                    return new ResponseEntity&lt;&gt;(bankAccountDTO,responseHeaders,HttpStatus.OK);</span>
+
+                }else{
+<span class="nc" id="L81">                    getTiempoRespuesta(inicioDeEjecucion);</span>
+<span class="nc" id="L82">                    responseText = &quot;Nombre de usuario o password incorrecto&quot;;</span>
+<span class="nc" id="L83">                    return new ResponseEntity&lt;&gt;(responseText, responseHeaders, HttpStatus.OK);</span>
+                }
+            }else{
+<span class="nc" id="L86">                getTiempoRespuesta(inicioDeEjecucion);</span>
+<span class="nc" id="L87">                responseText = &quot;Password Incorrecto&quot;;</span>
+<span class="nc" id="L88">                return new ResponseEntity&lt;&gt;(responseText, responseHeaders, HttpStatus.OK);</span>
+            }
+        }else{
+<span class="fc" id="L91">            getTiempoRespuesta(inicioDeEjecucion);</span>
+<span class="fc" id="L92">            responseText = &quot;Formato de fecha incorrecto&quot;;</span>
+<span class="fc" id="L93">            return new ResponseEntity&lt;&gt;(responseText, responseHeaders, HttpStatus.OK);</span>
+        }//fin validacion date
+
+    }//fin metodo getUserAccount
+
+
+    @GetMapping(value=&quot;/getAccounts&quot;,produces = &quot;application/json&quot;)
+    public ResponseEntity&lt;List&lt;BankAccountDTO&gt;&gt; getAccounts() {
+<span class="fc" id="L101">        LOGGER.info(&quot;El puerto usado es &quot;+port);</span>
+<span class="fc" id="L102">        LOGGER.info(msgProcPeticion);</span>
+<span class="fc" id="L103">        Instant inicioDeEjecucion = Instant.now();</span>
+<span class="fc" id="L104">        List&lt;BankAccountDTO&gt; accounts = bankAccountService.getAccounts();</span>
+
+        //Implementar el patron de diseño de comportamiento Iterator
+<span class="fc" id="L107">        List&lt;BankAccountDTO&gt; accountsIteratorList = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L108">        BankAccountDTOCollection bankAccountDTOCollection = getAccountCollection(accounts);</span>
+<span class="fc" id="L109">        Iterator iterator = bankAccountDTOCollection.iterator(&quot;ALL&quot;);</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">        while(iterator.hasNext()){</span>
+<span class="fc" id="L111">            BankAccountDTO b = iterator.next();</span>
+<span class="fc" id="L112">            accountsIteratorList.add(b);</span>
+<span class="fc" id="L113">        }//terminacion implementación patron de diseño de comportamiento Iterator</span>
+
+<span class="fc" id="L115">        getTiempoRespuesta(inicioDeEjecucion);</span>
+<span class="fc" id="L116">        HttpHeaders responseHeaders = new HttpHeaders();</span>
+<span class="fc" id="L117">        responseHeaders.set(&quot;Content-Type&quot;, &quot;application/json; charset=UTF-8&quot;);</span>
+<span class="fc" id="L118">        return new ResponseEntity&lt;&gt;(accountsIteratorList, responseHeaders, HttpStatus.OK);</span>
+    }//fin metodo getAccounts
+
+    @PreAuthorize(&quot;hasRole('ADMIN')&quot;)
+    @GetMapping(value=&quot;/getAccountsGroupByType&quot;,produces = &quot;application/json&quot;)
+    public ResponseEntity&lt;Map&lt;String, List&lt;BankAccountDTO&gt;&gt;&gt; getAccountsGroupByType() {
+<span class="fc" id="L124">        LOGGER.info(msgProcPeticion);</span>
+<span class="fc" id="L125">        Instant inicioDeEjecucion = Instant.now();</span>
+
+<span class="fc" id="L127">        List&lt;BankAccountDTO&gt; accounts = bankAccountService.getAccounts();</span>
+
+        // Aqui implementaremos la programación funcional
+        Map&lt;String,List&lt;BankAccountDTO&gt;&gt; groupedAccounts;
+<span class="fc" id="L131">        Function&lt;BankAccountDTO,String&gt; groupFunction = (account) -&gt; account.getAccountType().toString();</span>
+<span class="fc" id="L132">        groupedAccounts = accounts.stream().collect(Collectors.groupingBy(groupFunction));</span>
+
+<span class="fc" id="L134">        getTiempoRespuesta(inicioDeEjecucion);</span>
+
+<span class="fc" id="L136">        return new ResponseEntity&lt;&gt;(groupedAccounts, HttpStatus.OK);</span>
+
+    }//fin metodo getAccountsGroupByType
+
+    @Operation(summary = &quot;Envia saludo al usuario&quot;)
+    @PreAuthorize(&quot;hasRole('GUEST')&quot;)
+    @GetMapping(&quot;/sayHello&quot;)
+    public ResponseEntity&lt;String&gt; sayHelloGuest(@RequestParam String user) {
+<span class="fc" id="L144">        WelcomeUser welcomeUser = (nameUser) -&gt; &quot;Bienvenido &quot; + nameUser;</span>
+<span class="fc" id="L145">        return new ResponseEntity&lt;&gt;(welcomeUser.sayHelloTo(user), HttpStatus.OK);</span>
+    }
+
+    @PreAuthorize(&quot;hasRole('GUEST')&quot;)
+    @GetMapping(&quot;/executeApi&quot;)
+    public ResponseEntity&lt;String&gt; executeApiExterna() {
+<span class="fc" id="L151">        RestTemplate plantilla = new RestTemplate();</span>
+<span class="fc" id="L152">        String resultado = plantilla.getForObject(&quot;https://pokeapi.co/api/v2/pokemon/ditto&quot;,String.class);</span>
+<span class="fc" id="L153">        return new ResponseEntity&lt;&gt;(resultado, HttpStatus.OK);</span>
+    }
+
+
+    @DeleteMapping(&quot;/deleteAccounts&quot;)
+    public ResponseEntity&lt;String&gt; deleteAccounts(){
+<span class="fc" id="L159">        bankAccountService.deleteAccounts();</span>
+<span class="fc" id="L160">        return new ResponseEntity&lt;&gt;(&quot;Todas las cuentas borradas&quot;,HttpStatus.OK);</span>
+    }//fin del metodo deleteAccounts
+
+    @PutMapping(&quot;updateAccounts&quot;)
+    public ResponseEntity&lt;String&gt; updateAccounts(@RequestParam String user){
+<span class="fc" id="L165">        LOGGER.info(msgProcPeticion);</span>
+<span class="fc" id="L166">        Instant inicioDeEjecucion = Instant.now();</span>
+<span class="fc" id="L167">        bankAccountService.updateAccounts(user);</span>
+<span class="fc" id="L168">        getTiempoRespuesta(inicioDeEjecucion);</span>
+<span class="fc" id="L169">        return new ResponseEntity&lt;&gt;(&quot;Se actualiza accountName del usuario &quot;.concat(user),HttpStatus.OK);</span>
+    }//fin del metodo updateAccounts
+
+
+    @PreAuthorize(&quot;hasRole('USER')&quot;)
+    @GetMapping(&quot;/getAccountByUser&quot;)
+    public ResponseEntity&lt;List&lt;BankAccountDTO&gt;&gt; getAccountByUser(@RequestParam String user) {
+<span class="fc" id="L176">        LOGGER.info(msgProcPeticion);</span>
+<span class="fc" id="L177">        Instant inicioDeEjecucion = Instant.now();</span>
+<span class="fc" id="L178">        LOGGER.info(&quot;LearningJava - Procesando peticion HTTP de tipo GET&quot;);</span>
+<span class="fc" id="L179">        List&lt;BankAccountDTO&gt; accounts = bankAccountService.getAccountByUser(user);</span>
+<span class="fc" id="L180">        Instant finalDeEjecucion = Instant.now();</span>
+<span class="fc" id="L181">        getTiempoRespuesta(inicioDeEjecucion,finalDeEjecucion);</span>
+
+<span class="fc" id="L183">        HttpHeaders responseHeaders = new HttpHeaders();</span>
+<span class="fc" id="L184">        responseHeaders.set(&quot;Content-Type&quot;, &quot;application/json; charset=UTF-8&quot;);</span>
+<span class="fc" id="L185">        return new ResponseEntity&lt;&gt;(accounts, responseHeaders, HttpStatus.OK);</span>
+    }//fin del metodo getAccountByUser
+
+
+    //Uso de FeignClient for demo purposes
+    @GetMapping(&quot;/getExternalUser/{userId}&quot;)
+    public ResponseEntity&lt;Post&gt; getExternalUser(@PathVariable Long userId) {
+<span class="nc" id="L192">        Post postTest = accountsJSONClient.getPostById(userId);</span>
+<span class="nc" id="L193">        LOGGER.info(&quot;Getting post userId...&quot; +postTest.getUserId());</span>
+<span class="nc" id="L194">        LOGGER.info(&quot;Getting post body...&quot; +postTest.getBody());</span>
+<span class="nc" id="L195">        LOGGER.info(&quot;Getting post title...&quot; +postTest.getTitle());</span>
+<span class="nc" id="L196">        postTest.setUserId(&quot;External user &quot;+randomAccountNumber());</span>
+<span class="nc" id="L197">        postTest.setBody(&quot;No info in accountBalance since it is an external user&quot;);</span>
+<span class="nc" id="L198">        postTest.setTitle(&quot;No info in title since it is an external user&quot;);</span>
+<span class="nc" id="L199">        LOGGER.info(&quot;Setting post userId...&quot; +postTest.getUserId());</span>
+<span class="nc" id="L200">        LOGGER.info(&quot;Setting post body...&quot; +postTest.getBody());</span>
+<span class="nc" id="L201">        LOGGER.info(&quot;Setting post title....&quot;+postTest.getTitle());</span>
+<span class="nc" id="L202">        HttpHeaders responseHeaders = new HttpHeaders();</span>
+<span class="nc" id="L203">        responseHeaders.set(&quot;Content-Type&quot;, &quot;application/json; charset=UTF-8&quot;);</span>
+<span class="nc" id="L204">        return new ResponseEntity&lt;&gt;(postTest, responseHeaders, HttpStatus.OK);</span>
+    }//fin del metodo getExternalUser
+
+
+    @PostMapping(path = &quot;/send/{userId}&quot;)
+    public void sendUserAccount(@PathVariable int userId) {
+<span class="nc" id="L210">        List&lt;BankAccountDTO&gt; accounts = bankAccountService.getAccounts();</span>
+<span class="nc" id="L211">        LOGGER.info(&quot;------------------registro a seleccionar &quot;+userId);</span>
+<span class="nc" id="L212">        BankAccountDTO account = accounts.get(userId);</span>
+<span class="nc" id="L213">        LOGGER.info(&quot;------------------Total de cuentas &quot;+accounts.size());</span>
+<span class="nc" id="L214">        LOGGER.info(&quot;------------------ &quot;+account.getUser());</span>
+<span class="nc" id="L215">        this.template.send(&quot;useraccount-topic&quot;, account);</span>
+<span class="nc" id="L216">    }</span>
+
+
+    private void getTiempoRespuesta(Instant inicioDeEjecucion){
+<span class="fc" id="L220">        Instant finalDeEjecucion = Instant.now();</span>
+<span class="fc" id="L221">        String total = new String(String.valueOf(Duration.between(inicioDeEjecucion, finalDeEjecucion).toMillis()).concat(&quot; segundos.&quot;));</span>
+<span class="fc" id="L222">        LOGGER.info(&quot;Tiempo de respuesta: &quot;.concat(total));</span>
+<span class="fc" id="L223">    }</span>
+
+    //Sobrecarga de metodo getTiempoRespuesta
+    private void getTiempoRespuesta(Instant inicioDeEjecucion, Instant finalDeEjecucion){
+<span class="fc" id="L227">        String total = new String(String.valueOf(Duration.between(inicioDeEjecucion, finalDeEjecucion).toMillis()).concat(&quot; segundos.&quot;));</span>
+<span class="fc" id="L228">        LOGGER.info(&quot;Tiempo de respuesta: &quot;.concat(total));</span>
+<span class="fc" id="L229">    }</span>
+
+    private BankAccountDTOCollection getAccountCollection (List&lt;BankAccountDTO&gt; bankAccountDTOList){
+<span class="fc" id="L232">        BankAccountDTOCollection bankAccountDTOCollection = new BankAccountDTOCollectionImpl();</span>
+<span class="fc bfc" id="L233" title="All 2 branches covered.">        for(BankAccountDTO bankAccountDTO : bankAccountDTOList){</span>
+<span class="fc" id="L234">            bankAccountDTOCollection.addBankAccountDTO(bankAccountDTO);</span>
+<span class="fc" id="L235">        }</span>
+<span class="fc" id="L236">        return bankAccountDTOCollection;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -19,3 +19,8 @@ Dentro de la carpeta Entregable_2 se encuentran los archivos en formato .png cor
 evidencia de las actividades realizadas, y la carpeta ProyectoCodigoJava el cual contiene todo el código fuente
 que se trabajó en este entregable.
 
+# Tercer entregable: se organizó de la siguiente manera:
+Dentro de la carpeta Entregable_3 se encuentran los archivos en formato .png correspondientes a la evidencia
+de las actividades realizadas para el último entregable, y la carpet ProyectoCodigoFinal el cual contiene todo el codigo fuente
+que se trabajó en este entregable.
+

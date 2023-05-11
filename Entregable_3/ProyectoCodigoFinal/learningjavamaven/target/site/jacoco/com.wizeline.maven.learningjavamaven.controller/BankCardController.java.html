@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BankCardController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">learningjavamaven</a> &gt; <a href="index.source.html" class="el_package">com.wizeline.maven.learningjavamaven.controller</a> &gt; <span class="el_source">BankCardController.java</span></div><h1>BankCardController.java</h1><pre class="source lang-java linenums">package com.wizeline.maven.learningjavamaven.controller;
+
+import com.wizeline.maven.learningjavamaven.model.BankAccountDTO;
+import com.wizeline.maven.learningjavamaven.model.CardDTO;
+import com.wizeline.maven.learningjavamaven.service.BankCardService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
+@Tag(name = &quot;BankCard&quot;, description = &quot;Acceso información a tarjetas .&quot;)
+@RequestMapping(&quot;/api&quot;)
+@RestController
+<span class="fc" id="L24">public class BankCardController {</span>
+
+
+<span class="fc" id="L27">    private static final Logger LOGGER = Logger.getLogger(BankCardController.class.getName());</span>
+    @Autowired
+    BankCardService bankCardService;
+
+    @GetMapping(value=&quot;/getCards&quot;,produces = &quot;application/json&quot;)
+    public ResponseEntity&lt;Map&lt;String, List&lt;CardDTO&gt;&gt;&gt; getCardsGroupByType() {
+<span class="fc" id="L33">        LOGGER.info(&quot;Inicia funcionalidad para obtener las tarjetas &quot;);</span>
+
+<span class="fc" id="L35">        List&lt;CardDTO&gt; cards = bankCardService.getCards();</span>
+<span class="fc" id="L36">        LOGGER.info(&quot;El tamaño del arreglo obtenido de tarjetas es &quot;+ cards.size());</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">        for(CardDTO cardsList : cards){</span>
+<span class="fc" id="L38">            LOGGER.info(&quot;dato  &quot;+cardsList.getCardIssuer());</span>
+<span class="fc" id="L39">        }</span>
+
+        // Aqui implementaremos la programación funcional
+        Map&lt;String,List&lt;CardDTO&gt;&gt; groupedCards;
+<span class="fc" id="L43">        Function&lt;CardDTO,String&gt; groupFunction = (card) -&gt; card.getCardType().toString();</span>
+<span class="fc" id="L44">        groupedCards = cards.stream().collect(Collectors.groupingBy(groupFunction));</span>
+
+<span class="fc" id="L46">        return new ResponseEntity&lt;&gt;(groupedCards, HttpStatus.OK);</span>
+
+    }//fin
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
